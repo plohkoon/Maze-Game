@@ -17,7 +17,7 @@ class _MazeState extends State<Maze> {
   int size;
   _MazeState(size) {
     this.size = size;
-    this.maze = MazeGenerators.primsAlgo(size);
+    this.maze = MazeGenerators.recursiveBacktrack(size);
   }
   @override
   Widget build(BuildContext context) {
@@ -27,26 +27,3 @@ class _MazeState extends State<Maze> {
       );
   }
 }
-
-/*[
-    Testing the different maze tiles
-    //single entrances
-    {"up": true, "down": false, "left": false, "right": false},
-    {"up": false, "down": true, "left": false, "right": false},
-    {"up": false, "down": false, "left": true, "right": false},
-    {"up": false, "down": false, "left": false, "right": true},
-    //double entrances
-    {"up": true, "down": true, "left": false, "right": false},
-    {"up": true, "down": false, "left": true, "right": false},
-    {"up": true, "down": false, "left": false, "right": true},
-    {"up": false, "down": true, "left": true, "right": false},
-    {"up": false, "down": true, "left": false, "right": true},
-    {"up": false, "down": false, "left": true, "right": true},
-    //triple entrances
-    {"up": true, "down": true, "left": true, "right": false},
-    {"up": true, "down": true, "left": false, "right": true},
-    {"up": true, "down": false, "left": true, "right": true},
-    {"up": false, "down": true, "left": true, "right": true},
-    //quadruple entrances
-    {"up": true, "down": true, "left": true, "right": true},
-  ];*/
