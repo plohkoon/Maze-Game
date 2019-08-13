@@ -44,7 +44,7 @@ class MyHomePage extends StatefulWidget {
   final List<Map<String, bool>> values = [
     //single entrances
     {"up": true, "down": false, "left": false, "right": false},
-    /*{"up": false, "down": true, "left": false, "right": false},
+    {"up": false, "down": true, "left": false, "right": false},
     {"up": false, "down": false, "left": true, "right": false},
     {"up": false, "down": false, "left": false, "right": true},
     //double entrances
@@ -60,7 +60,7 @@ class MyHomePage extends StatefulWidget {
     {"up": true, "down": false, "left": true, "right": true},
     {"up": false, "down": true, "left": true, "right": true},
     //quadruple entrances
-    {"up": true, "down": true, "left": true, "right": true},*/
+    {"up": true, "down": true, "left": true, "right": true},
   ];
 
   @override
