@@ -19,4 +19,7 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
-android/.gradle/4.10.2/javaCompile/javaCompile.lock
+#avoid commiting ios and android file
+android/*
+ios/*
+
