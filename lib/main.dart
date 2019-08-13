@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maze_generator/Tile.dart';
+import 'package:maze_generator/maze/Maze.dart';
 
 void main() => runApp(MyApp());
 
@@ -41,45 +41,19 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
-  final List<Map<String, bool>> values = [
-    //single entrances
-    {"up": true, "down": false, "left": false, "right": false},
-    {"up": false, "down": true, "left": false, "right": false},
-    {"up": false, "down": false, "left": true, "right": false},
-    {"up": false, "down": false, "left": false, "right": true},
-    //double entrances
-    {"up": true, "down": true, "left": false, "right": false},
-    {"up": true, "down": false, "left": true, "right": false},
-    {"up": true, "down": false, "left": false, "right": true},
-    {"up": false, "down": true, "left": true, "right": false},
-    {"up": false, "down": true, "left": false, "right": true},
-    {"up": false, "down": false, "left": true, "right": true},
-    //triple entrances
-    {"up": true, "down": true, "left": true, "right": false},
-    {"up": true, "down": true, "left": false, "right": true},
-    {"up": true, "down": false, "left": true, "right": true},
-    {"up": false, "down": true, "left": true, "right": true},
-    //quadruple entrances
-    {"up": true, "down": true, "left": true, "right": true},
-  ];
-
   @override
-  _MyHomePageState createState() => _MyHomePageState(values);
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-   final List<Map<String, bool>> value;
-   _MyHomePageState(this.value);
+   _MyHomePageState();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Maze Game"),
       ),
-      body: GridView.count(
-        crossAxisCount: 4,
-        children: value.map((dir) => Tile(directions: dir)).toList()
-      ),
+      body: Maze(size: 15),
     );
   }
 }
