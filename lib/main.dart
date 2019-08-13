@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
+        primaryColor: Colors.red,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -40,24 +41,44 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
+  final List<Map<String, bool>> values = [
+    //single entrances
+    {"up": true, "down": false, "left": false, "right": false},
+    /*{"up": false, "down": true, "left": false, "right": false},
+    {"up": false, "down": false, "left": true, "right": false},
+    {"up": false, "down": false, "left": false, "right": true},
+    //double entrances
+    {"up": true, "down": true, "left": false, "right": false},
+    {"up": true, "down": false, "left": true, "right": false},
+    {"up": true, "down": false, "left": false, "right": true},
+    {"up": false, "down": true, "left": true, "right": false},
+    {"up": false, "down": true, "left": false, "right": true},
+    {"up": false, "down": false, "left": true, "right": true},
+    //triple entrances
+    {"up": true, "down": true, "left": true, "right": false},
+    {"up": true, "down": true, "left": false, "right": true},
+    {"up": true, "down": false, "left": true, "right": true},
+    {"up": false, "down": true, "left": true, "right": true},
+    //quadruple entrances
+    {"up": true, "down": true, "left": true, "right": true},*/
+  ];
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState(values);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final value = [
-    "left","right","up","down","forward",
-    "left","right","up","down","forward",
-    "left","right","up","down","forward",
-    "left","right","up","down","forward",
-    "left","right","up","down","forward",
-  ];
+   final List<Map<String, bool>> value;
+   _MyHomePageState(this.value);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Maze Game"),
+      ),
       body: GridView.count(
-        crossAxisCount: 5,
-        children: value.map((dir) => Text(dir)).toList()
+        crossAxisCount: 4,
+        children: value.map((dir) => Tile(directions: dir)).toList()
       ),
     );
   }
