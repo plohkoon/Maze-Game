@@ -45,7 +45,8 @@ class MazeGenerators {
     return maze.expand((row) => row).toList();
   }
   //the actual recursive implementation in a private function
-  static List<List<Map<String, bool>>> _runRecursiveBacktrack(
+  //void
+  static void _runRecursiveBacktrack(
     int row,
     int col,
     int dim,

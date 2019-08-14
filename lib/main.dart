@@ -46,6 +46,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int size = 75;
    _MyHomePageState();
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,13 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text("Maze Game"),
       ),
-      body: Maze(size: 15),
+      body: Maze(size: this.size),
+      floatingActionButton: FloatingActionButton(
+        onPressed: ()=>setState((){size++;}),
+        child: Icon(
+          Icons.plus_one
+        ),
+      ),
     );
   }
 }

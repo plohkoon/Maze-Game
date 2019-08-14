@@ -17,7 +17,7 @@ class _MazeState extends State<Maze> {
   int size;
   _MazeState(size) {
     this.size = size;
-    this.maze = MazeGenerators.recursiveBacktrack(size);
+    this.maze = MazeGenerators.primsAlgo(size);
   }
   @override
   Widget build(BuildContext context) {
