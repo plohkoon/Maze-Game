@@ -36,12 +36,14 @@ class _MazeState extends State<Maze> {
   }
   //when the size updates updates the internal size
   @override
-  void didUpdateWidget(Maze newMaze) {
-    if(newMaze.size != this.size) {
-      this.size = newMaze.size;
-      this.maze = MazeGenerators.recursiveBacktrack(this.size);
+  void didUpdateWidget(Maze oldMaze) {
+    //if size changes updates maze
+    if(oldMaze.size != this.widget.size) {
+      this.size = oldMaze.size;
+      this._generateMaze();
     }
-    super.didUpdateWidget(newMaze);
+    super.didUpdateWidget(oldMaze);
+  }
   
   void _generateMaze() {
     //generates the maze
