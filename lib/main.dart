@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:maze_generator/maze/Maze.dart';
 
@@ -48,7 +46,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int size = 10;
+  int size = 5;
    _MyHomePageState();
   @override
   Widget build(BuildContext context) {
@@ -68,9 +66,11 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             IconButton(
               icon: Icon(Icons.home),
+              onPressed: () => print("home"),
             ),
             IconButton(
-              icon: Icon(Icons.map)
+              icon: Icon(Icons.map),
+              onPressed: () => print("maze1"),
             )
           ],
         )
