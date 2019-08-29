@@ -58,10 +58,22 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Maze(size: this.size),
       floatingActionButton: FloatingActionButton(
-        onPressed: ()=>setState((){size++;}),
+        onPressed: ()=>setState(() => size++),
         child: Icon(
-          Icons.plus_one
+          Icons.add,
         ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.home),
+            ),
+            IconButton(
+              icon: Icon(Icons.map)
+            )
+          ],
+        )
       ),
     );
   }

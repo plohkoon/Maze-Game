@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-//state initialization
-class Tile extends StatefulWidget {
+
+class Tile extends StatelessWidget {
   final Map<String, bool> directions;
   Tile({Key key, @required this.directions}): super(key: key);
 
-  @override
-  _TileState createState() => _TileState(directions);
-}
-
-class _TileState extends State<Tile> {
-  //grabs the state
-  Map<String, bool> directions;
-  _TileState(this.directions);
   //builds the widget
   @override
   Widget build(BuildContext context) {
