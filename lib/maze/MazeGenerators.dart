@@ -29,7 +29,6 @@ class MazeGenerators {
   static List<Map<String, bool>> recursiveBacktrack(int size) {
     //grabs a new maze
     List<List<Map<String, bool>>> maze = _emptyMaze(size);
-    log(size.toString());
     //creates the array of visited values
     List<List<bool>> visited = new List(size);
     //initializes the cells that have been visited
@@ -116,7 +115,6 @@ class MazeGenerators {
   }
   //another implementation of a maze algorithm, this generates a much more erractic and harder to find path
   static List<Map<String, bool>> primsAlgo(int size) {
-    log(size.toString());
     //initializes the empty maze
     List<List<Map<String, bool>>> maze = _emptyMaze(size);
     //grabs the first cell
