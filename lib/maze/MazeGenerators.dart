@@ -19,6 +19,10 @@ class MazeGenerators {
           "right": false,
           "down": false,
           "left": false,
+          "moveUp": false,
+          "moveRight": false,
+          "moveDown": false,
+          "moveLeft": false,
         };
       }
       empty[i] = currentRow;
