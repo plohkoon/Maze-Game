@@ -1,7 +1,8 @@
-import 'dart:developer';
-
 import 'dart:math' as Math;
-
+/*
+A class full of static methods to generate mazes
+that are various methods of doing such task
+*/
 class MazeGenerators {
   static Math.Random randomizer = Math.Random();
   //a private function to generate an empty maaze to be generated upon
@@ -22,9 +23,9 @@ class MazeGenerators {
       }
       empty[i] = currentRow;
     }
-    log(empty.toString());
     return empty;
   }
+  //implements the recursive backtrack method of generating mazes
   static List<Map<String, bool>> recursiveBacktrack(int size) {
     //grabs a new maze
     List<List<Map<String, bool>>> maze = _emptyMaze(size);
@@ -106,6 +107,7 @@ class MazeGenerators {
             break;
           default:
         }
+        directions.removeAt(dirInd);
         //recurses to the next tile
         _runRecursiveBacktrack(newrow, newcol, dim, visited, maze);
       }

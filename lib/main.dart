@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:maze_generator/maze/Maze.dart';
 
@@ -46,7 +48,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int size = 75;
+  int size = 10;
    _MyHomePageState();
   @override
   Widget build(BuildContext context) {
