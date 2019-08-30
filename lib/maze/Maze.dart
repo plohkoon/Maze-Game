@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:maze_generator/tile/Tile.dart';
 import 'package:maze_generator/maze/MazeGenerators.dart';
@@ -18,11 +16,17 @@ class Maze extends StatefulWidget {
 class _MazeState extends State<Maze> {
   //holder for the maze and moves
   List<Map<String, bool>> maze;
-
   //keeps track of the square size and the in and out
   int size;
   int entrance;
   int exit;
+  //tracks the current tile we are in
+  int currentTile;
+  //tracks the start and current x positions of the current swipe
+  double xStart;
+  double yStart;
+  double xCurrent;
+  double yCurrent;
   //a constant reference to a randomizer
   Math.Random randomizer = new Math.Random();
   //constructor
@@ -30,7 +34,6 @@ class _MazeState extends State<Maze> {
   //generates the initial maze
   @override
   void initState() {
-    log("Setting initial maze");
     this._generateMaze();
     super.initState();
   }
@@ -39,12 +42,12 @@ class _MazeState extends State<Maze> {
   void didUpdateWidget(Maze oldMaze) {
     //if size changes updates maze
     if(oldMaze.size != this.widget.size) {
-      this.size = oldMaze.size;
+      this.size = this.widget.size;
       this._generateMaze();
     }
     super.didUpdateWidget(oldMaze);
   }
-  
+  //fucntion to generate the maze, grab current tile, and start/stop
   void _generateMaze() {
     //generates the maze
     List<Map<String, bool>> maze = MazeGenerators.recursiveBacktrack(this.size);
@@ -53,19 +56,151 @@ class _MazeState extends State<Maze> {
     int end = maze.length - 1 - randomizer.nextInt(this.size);
     //opens the walls at entrance and exit
     maze[start]["up"] = true;
+    maze[start]["moveUp"] = true;
     maze[end]["down"] = true;
     //sets the in and out class variables
     this.entrance = start;
+    this.currentTile = start;
     this.exit = end;
     //sets the maze
     this.maze = maze;
   }
+  //records the inital position of the swipe
+  void handleSwipeStart(DragStartDetails details) {
+    this.xStart = details.localPosition.dx;
+    this.yStart = details.localPosition.dy;
+  }
+  //records the updated position of the swipe
+  void handleSwipeUpdate(DragUpdateDetails details) {
+    this.xCurrent = details.localPosition.dx;
+    this.yCurrent = details.localPosition.dy;
+    /*
+    This is the same logi as handlswipeend,
+    if I add a sleep here should be able to make the move logic one continuous swipe
+    //grabs the direction and magnitude in the x and y directions
+    double deltaX = this.xCurrent - this.xStart;
+    double deltaY = this.yCurrent - this.yStart;
+    //if the swipe is more in the x direction
+    if(deltaX.abs() > deltaY.abs()) {
+      //if the swipe's x is greater than 0 it is to the right
+      if(deltaX > 0 && maze[this.currentTile]["right"]) {
+        print("right");
+        setState(() {
+          //updates moves in the tiles
+          maze[this.currentTile]["moveRight"] = !maze[this.currentTile]["moveRight"];
+          this.currentTile++;
+          maze[this.currentTile]["moveLeft"] = !maze[this.currentTile]["moveLeft"];
+        });
+        print(maze[this.currentTile]["moveLeft"]);
+      }
+      //if the swipe's x is less than 0 it is to the left
+      else if(deltaX < 0 && maze[this.currentTile]["left"]) {
+        print("left");
+        setState(() {
+          //updates moves in the tiles
+          maze[this.currentTile]["moveLeft"] = !maze[this.currentTile]["moveLeft"];
+          this.currentTile--;
+          maze[this.currentTile]["moveRight"] = !maze[this.currentTile]["moveRight"];
+        });
+        print(maze[this.currentTile]["moveRight"]);
+      }
+    }
+    //if the swipe is more in the y direction
+    else {
+      //the swipes y is greater than 0 is is moving top down
+      if(deltaY > 0 && maze[this.currentTile]["down"]) {
+        print("down");
+        setState(() {
+          //updates moves in the tiles
+          maze[this.currentTile]["moveDown"] = !maze[this.currentTile]["moveDown"];
+          this.currentTile += this.size;
+          maze[this.currentTile]["moveUp"] = !maze[this.currentTile]["moveUp"];
+        });
+        print(maze[this.currentTile]["moveUp"]);
+      }
+      //the swipes y is less than 0 is moving bottom up
+      else if(deltaY < 0 && maze[this.currentTile]["up"]) {
+        print("up");
+        setState(() {
+          //updates moves in the tiles
+          maze[this.currentTile]["moveUp"] = !maze[this.currentTile]["moveUp"];
+          this.currentTile -= this.size;
+          maze[this.currentTile]["moveDown"] = !maze[this.currentTile]["moveDown"];
+        });
+        print(maze[this.currentTile]["moveDown"]);
+      }
+    }
+    */
+  }
+  //handles the logic of determining directions from the swipe
+  void handleSwipeEnd(DragEndDetails details) {
+    //grabs the direction and magnitude in the x and y directions
+    double deltaX = this.xCurrent - this.xStart;
+    double deltaY = this.yCurrent - this.yStart;
+    //if the swipe is more in the x direction
+    if(deltaX.abs() > deltaY.abs()) {
+      //if the swipe's x is greater than 0 it is to the right
+      if(deltaX > 0 && maze[this.currentTile]["right"]) {
+        print("right");
+        setState(() {
+          //updates moves in the tiles
+          maze[this.currentTile]["moveRight"] = !maze[this.currentTile]["moveRight"];
+          this.currentTile++;
+          maze[this.currentTile]["moveLeft"] = !maze[this.currentTile]["moveLeft"];
+        });
+        print(maze[this.currentTile]["moveLeft"]);
+      }
+      //if the swipe's x is less than 0 it is to the left
+      else if(deltaX < 0 && maze[this.currentTile]["left"]) {
+        print("left");
+        setState(() {
+          //updates moves in the tiles
+          maze[this.currentTile]["moveLeft"] = !maze[this.currentTile]["moveLeft"];
+          this.currentTile--;
+          maze[this.currentTile]["moveRight"] = !maze[this.currentTile]["moveRight"];
+        });
+        print(maze[this.currentTile]["moveRight"]);
+      }
+    }
+    //if the swipe is more in the y direction
+    else {
+      //the swipes y is greater than 0 is is moving top down
+      if(deltaY > 0 && maze[this.currentTile]["down"]) {
+        print("down");
+        setState(() {
+          //updates moves in the tiles
+          maze[this.currentTile]["moveDown"] = !maze[this.currentTile]["moveDown"];
+          this.currentTile += this.size;
+          maze[this.currentTile]["moveUp"] = !maze[this.currentTile]["moveUp"];
+        });
+        print(maze[this.currentTile]["moveUp"]);
+      }
+      //the swipes y is less than 0 is moving bottom up
+      else if(deltaY < 0 && maze[this.currentTile]["up"]) {
+        print("up");
+        setState(() {
+          //updates moves in the tiles
+          maze[this.currentTile]["moveUp"] = !maze[this.currentTile]["moveUp"];
+          this.currentTile -= this.size;
+          maze[this.currentTile]["moveDown"] = !maze[this.currentTile]["moveDown"];
+        });
+        print(maze[this.currentTile]["moveDown"]);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
+    print("building maze");
+    return GestureDetector(
+      child: GridView.count(
         crossAxisCount: this.size,
-        children: this.maze.map((dir) => Tile(directions: dir)).toList()
-      );
+        children: this.maze.map((dir) => Tile(directions: dir)).toList(),
+        primary: false,
+      ),
+      onPanStart: this.handleSwipeStart,
+      onPanUpdate: this.handleSwipeUpdate,
+      onPanEnd: this.handleSwipeEnd,
+    );
   }
 }
