@@ -26,10 +26,8 @@ class _TileState extends State<Tile> {
   //on tile update updates the player path
   @override
   void didUpdateWidget(Tile oldWidget) {
-    if(oldWidget.directions != this.widget.directions) {
-      this.directions = this.widget.directions;
-      this._updateMoves();
-    }
+    this.directions = this.widget.directions;
+    this._updateMoves();
     super.didUpdateWidget(oldWidget);
   }
   //function to update the player path on the tile
