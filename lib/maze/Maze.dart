@@ -5,13 +5,15 @@ import 'dart:math' as Math;
 
 class Maze extends StatefulWidget {
 
-  Maze({Key key, this.size, this.accessibleControls}): super(key: key);
+  Maze({Key key, this.size, this.accessibleControls, this.triggerWin}): super(key: key);
 
   final int size;
   final bool accessibleControls;
 
+  final Function triggerWin;
+
   @override
-  _MazeState createState() => _MazeState(size, accessibleControls);
+  _MazeState createState() => _MazeState(size, accessibleControls, triggerWin);
 }
 
 class _MazeState extends State<Maze> {
@@ -30,10 +32,12 @@ class _MazeState extends State<Maze> {
   double yCurrent;
   //tracks whether accesible controls or not
   bool accessibleControls;
+
+  final Function triggerWin;
   //a constant reference to a randomizer
   Math.Random randomizer = new Math.Random();
   //constructor
-  _MazeState(this.size, this.accessibleControls);
+  _MazeState(this.size, this.accessibleControls, this.triggerWin);
   //generates the initial maze
   @override
   void initState() {
@@ -112,7 +116,7 @@ class _MazeState extends State<Maze> {
       //if the swipe is more in the y direction
       else {
         //the swipes y is greater than 0 is is moving top down
-        if(deltaY > 0 && maze[this.currentTile]["down"]) {
+        if(deltaY > 0 && maze[this.currentTile]["down"] && this.currentTile != this.exit) {
           print("down");
           setState(() {
             //updates moves in the tiles
@@ -121,6 +125,9 @@ class _MazeState extends State<Maze> {
             maze[this.currentTile]["moveUp"] = !maze[this.currentTile]["moveUp"];
           });
           print(maze[this.currentTile]["moveUp"]);
+        }
+        else if(deltaY > 0 && maze[this.currentTile]["down"] && this.currentTile == this.exit) {
+          this.triggerWin();
         }
         //the swipes y is less than 0 is moving bottom up
         else if(deltaY < 0 && maze[this.currentTile]["up"] && this.currentTile != this.entrance) {
@@ -174,7 +181,7 @@ class _MazeState extends State<Maze> {
       //if the swipe is more in the y direction
       else {
         //the swipes y is greater than 0 is is moving top down
-        if(deltaY > 0 && maze[this.currentTile]["down"]) {
+        if(deltaY > 0 && maze[this.currentTile]["down"] && this.currentTile != this.exit) {
           print("down");
           setState(() {
             //updates moves in the tiles
@@ -183,6 +190,9 @@ class _MazeState extends State<Maze> {
             maze[this.currentTile]["moveUp"] = !maze[this.currentTile]["moveUp"];
           });
           print(maze[this.currentTile]["moveUp"]);
+        }
+        else if(deltaY > 0 && maze[this.currentTile]["down"] && this.currentTile == this.exit) {
+          this.triggerWin();
         }
         //the swipes y is less than 0 is moving bottom up
         else if(deltaY < 0 && maze[this.currentTile]["up"]) {
