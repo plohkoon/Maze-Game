@@ -208,17 +208,37 @@ class _MazeState extends State<Maze> {
       }
     }
   }
-
   @override
   Widget build(BuildContext context) {
     //creates a gesture detector that will handle the swiping on the maze
     return GestureDetector(
-      //GridView that renders the maze off a 1 dimensional list
-      child: GridView.count(
-        crossAxisCount: this.size,
-        children: this.maze.map((dir) => Tile(directions: dir)).toList(),
-        primary: false,
+      //uses a layout builder to ensure the maze always renders fully in the screen
+      child: LayoutBuilder(
+        builder: (context, boxSize) {
+          //grabs the maxHeigh and maxWidth possible of the box the maze is rendered in
+          double maxHeight = boxSize.maxHeight;
+          double maxWidth = boxSize.maxWidth;
+          return SizedBox(
+            //GridView that renders the maze off a 1 dimensional list
+            child: GridView.count(
+              crossAxisCount: this.size,
+              crossAxisSpacing: 0,
+              children: this.maze.map((dir) => Tile(directions: dir)).toList(),
+              primary: false,
+              shrinkWrap: true,
+            ),
+            //if in portrait mode renders the square size as the size of the max width
+            height: maxHeight > maxWidth ?
+              maxWidth :
+              maxHeight,
+            //if in landscape mode renders the square size as the size of the max height
+            width: maxWidth > maxHeight ?
+              maxHeight :
+              maxWidth,
+          );
+        },
       ),
+      //defines the gesture function
       onPanStart: this.handleSwipeStart,
       onPanUpdate: this.handleSwipeUpdate,
       onPanEnd: this.handleSwipeEnd,
