@@ -7,7 +7,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Maze Game',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         primaryColor: Colors.red,
@@ -33,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final String title;
   //constructor
    _MyHomePageState(this.title);
-
+  //function to trigger win, at the moment just ups the size of the maze and regenerates
   void triggerWin() {
     setState(() {
       this.size++;
@@ -42,54 +42,60 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text(this.title),
-            Expanded(child: Row(),),
-            Row(
-              children: [
-                Text("Accessibility Controls"),
-                Switch(
-                  value: accessibleControls,
-                  onChanged: (bool newVal) => {
-                    setState(() {
-                      this.accessibleControls = !this.accessibleControls;
-                    }),
-                  },
-                ),
-              ],
-              
-            ),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        //appBar that contains the title and accessibility controls
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Text(this.title),
+              Expanded(child: Row(),),
+              //renders accessibility controls label and a switch to toggle it
+              Row(
+                children: [
+                  Text("Accessibility Controls"),
+                  Switch(
+                    value: accessibleControls,
+                    onChanged: (bool newVal) => {
+                      setState(() {
+                        this.accessibleControls = !this.accessibleControls;
+                      }),
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-      body: Maze(
-        size: this.size,
-        accessibleControls: this.accessibleControls,
-        triggerWin: this.triggerWin,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: ()=>setState(() => size++),
-        child: Icon(
-          Icons.add,
+        //the maze is the body of the app
+        body: Maze(
+          size: this.size,
+          accessibleControls: this.accessibleControls,
+          triggerWin: this.triggerWin,
         ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.home),
-              onPressed: () => print("home"),
-            ),
-            IconButton(
-              icon: Icon(Icons.map),
-              onPressed: () => print("maze1"),
-            )
-          ],
-        )
-      ),
+        //just a test FAB that tests the maze resizing
+        floatingActionButton: FloatingActionButton(
+          onPressed: ()=>setState(() => size++),
+          child: Icon(
+            Icons.add,
+          ),
+        ),
+        //will eventually be a navBar to switch between modes
+        bottomNavigationBar: BottomAppBar(
+          child: Row(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.home),
+                onPressed: () => print("home"),
+              ),
+              IconButton(
+                icon: Icon(Icons.map),
+                onPressed: () => print("maze1"),
+              )
+            ],
+          )
+        ),
+      )
     );
   }
 }
