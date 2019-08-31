@@ -82,7 +82,6 @@ class _MazeState extends State<Maze> {
     //grabs the direction and magnitude in the x and y directions
     double deltaX = this.xCurrent - this.xStart;
     double deltaY = this.yCurrent - this.yStart;
-    print(context.size.width.toString() + ', ' + context.size.height.toString());
     //is not using accessible controls every 0.1 width worth of the maze swiped results in a move on the maze
     if(!this.accessibleControls && (deltaX.abs() > context.size.width * 0.1 || deltaY.abs() > context.size.width * 0.1)) {
       //if the swipe is more in the x direction
