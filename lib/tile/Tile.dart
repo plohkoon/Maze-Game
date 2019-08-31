@@ -41,6 +41,9 @@ class _TileState extends State<Tile> {
     /*
       These if statements stylize the paths,
       the try catch ensures it caps at 2 paths
+      The catch should be unecessary as the nature of how 
+      the pathing is created should guarantee that only 
+      2 paths occur in any tile
     */
     try {
       if(directions["moveUp"]) {
