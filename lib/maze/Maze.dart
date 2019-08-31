@@ -4,7 +4,6 @@ import 'package:maze_generator/maze/MazeGenerators.dart';
 import 'dart:math' as Math;
 
 class Maze extends StatefulWidget {
-
   Maze({Key key, this.size, this.accessibleControls, this.triggerWin}): super(key: key);
   //parameters for size and accessibleControls
   final int size;
@@ -210,15 +209,15 @@ class _MazeState extends State<Maze> {
   }
   @override
   Widget build(BuildContext context) {
-    //creates a gesture detector that will handle the swiping on the maze
-    return GestureDetector(
-      //uses a layout builder to ensure the maze always renders fully in the screen
-      child: LayoutBuilder(
-        builder: (context, boxSize) {
-          //grabs the maxHeigh and maxWidth possible of the box the maze is rendered in
-          double maxHeight = boxSize.maxHeight;
-          double maxWidth = boxSize.maxWidth;
-          return SizedBox(
+    //uses a layout builder to ensure the maze always renders fully in the screen
+    return LayoutBuilder(
+      builder: (context, boxSize) {
+        //grabs the maxHeigh and maxWidth possible of the box the maze is rendered in
+        double maxHeight = boxSize.maxHeight;
+        double maxWidth = boxSize.maxWidth;
+        return SizedBox(
+          //creates a gesture detector that will handle the swiping on the maze 
+          child: GestureDetector(
             //GridView that renders the maze off a 1 dimensional list
             child: GridView.count(
               crossAxisCount: this.size,
@@ -227,21 +226,21 @@ class _MazeState extends State<Maze> {
               primary: false,
               shrinkWrap: true,
             ),
-            //if in portrait mode renders the square size as the size of the max width
-            height: maxHeight > maxWidth ?
-              maxWidth :
-              maxHeight,
-            //if in landscape mode renders the square size as the size of the max height
-            width: maxWidth > maxHeight ?
-              maxHeight :
-              maxWidth,
-          );
-        },
-      ),
-      //defines the gesture function
-      onPanStart: this.handleSwipeStart,
-      onPanUpdate: this.handleSwipeUpdate,
-      onPanEnd: this.handleSwipeEnd,
+            //defines the gesture function
+            onPanStart: this.handleSwipeStart,
+            onPanUpdate: this.handleSwipeUpdate,
+            onPanEnd: this.handleSwipeEnd,
+          ),
+          //if in portrait mode renders the square size as the size of the max width
+          height: maxHeight > maxWidth ?
+            maxWidth :
+            maxHeight,
+          //if in landscape mode renders the square size as the size of the max height
+          width: maxWidth > maxHeight ?
+            maxHeight :
+            maxWidth,
+        );
+      },
     );
   }
 }
