@@ -27,10 +27,14 @@ class _MyHomePageState extends State<MyHomePage> {
   bool accessibleControls = false;
   bool darkMode = false;
   final String title;
+
+  int page = 0;
   //constructor
    _MyHomePageState(this.title);
   //function to trigger win, at the moment just ups the size of the maze and regenerates
   void triggerWin() {
+    print("player won this one");
+    print(this.size.toString());
     setState(() {
       this.size++;
     });
@@ -41,6 +45,22 @@ class _MyHomePageState extends State<MyHomePage> {
       this.darkMode = !this.darkMode;
     });
   }
+
+  Widget _generateHome() {
+    return Text("Home");
+  }
+  Widget _generateBlitz() {
+    this.size = 5;
+    return Maze(
+            size: this.size,
+            accessibleControls: this.accessibleControls,
+            triggerWin: this.triggerWin,
+          );
+  }
+  Widget _generateTimeRush() {
+    return Text("Time Rush");
+  }
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -82,11 +102,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           //the maze is the body of the app
-          body: Maze(
-            size: this.size,
-            accessibleControls: this.accessibleControls,
-            triggerWin: this.triggerWin,
-          ),
+          body: [
+            Text("Home"),
+            Maze(
+              size: this.size,
+              accessibleControls: this.accessibleControls,
+              triggerWin: this.triggerWin,
+            ),
+            Text("Time Rush")
+          ][page],
           //FAB to change from light to dark mode
           floatingActionButton: FloatingActionButton(
             //passes the function
@@ -101,30 +125,28 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           //will eventually be a navBar to switch between modes
-          bottomNavigationBar: BottomAppBar(
-            child: Row(
-              //equally spacing the buttons on the navBar for navigation
-              children: <Widget>[
-                Expanded(
-                  child: IconButton(
-                    icon: Icon(Icons.home),
-                    onPressed: () => print("home"),
-                  ),
-                ),
-                Expanded(
-                  child: IconButton(
-                    icon: Icon(Icons.map),
-                    onPressed: () => print("maze1"),
-                  ),
-                ),
-                Expanded(
-                  child: IconButton(
-                    icon: Icon(Icons.playlist_add_check),
-                    onPressed: () => print("maze2"),
-                  ),
-                )
-              ],
-            ),
+          bottomNavigationBar: BottomNavigationBar(
+            onTap: (index) {
+              print(index);
+              setState(() {
+                page = index;
+              });
+            },
+            currentIndex: page,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                title: Text("Home"),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.map),
+                title: Text("Blitz"),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.playlist_add_check),
+                title: Text("Time Rush"),
+              ),
+            ],
           ),
         ),
       ),
