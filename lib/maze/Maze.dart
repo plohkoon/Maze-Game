@@ -6,12 +6,12 @@ import 'dart:math' as Math;
 class Maze extends StatefulWidget {
 
   Maze({Key key, this.size, this.accessibleControls, this.triggerWin}): super(key: key);
-
+  //parameters for size and accessibleControls
   final int size;
   final bool accessibleControls;
-
+  //parameter for the triggerWin function
   final Function triggerWin;
-
+  //the create state function
   @override
   _MazeState createState() => _MazeState(size, accessibleControls, triggerWin);
 }
@@ -32,7 +32,7 @@ class _MazeState extends State<Maze> {
   double yCurrent;
   //tracks whether accesible controls or not
   bool accessibleControls;
-
+  //declares the triggerWin function that will be passed from main
   final Function triggerWin;
   //a constant reference to a randomizer
   Math.Random randomizer = new Math.Random();
@@ -211,8 +211,9 @@ class _MazeState extends State<Maze> {
 
   @override
   Widget build(BuildContext context) {
-    print("building maze");
+    //creates a gesture detector that will handle the swiping on the maze
     return GestureDetector(
+      //GridView that renders the maze off a 1 dimensional list
       child: GridView.count(
         crossAxisCount: this.size,
         children: this.maze.map((dir) => Tile(directions: dir)).toList(),
