@@ -38,7 +38,26 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(this.title),
+        title: Row(
+          children: [
+            Text(this.title),
+            Expanded(child: Row(),),
+            Row(
+              children: [
+                Text("Accessibility Controls"),
+                Switch(
+                  value: accessibleControls,
+                  onChanged: (bool newVal) => {
+                    setState(() {
+                      this.accessibleControls = !this.accessibleControls;
+                    }),
+                  },
+                ),
+              ],
+              
+            ),
+          ],
+        ),
       ),
       body: Maze(
         size: this.size,
