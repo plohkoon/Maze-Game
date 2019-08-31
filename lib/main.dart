@@ -34,6 +34,12 @@ class _MyHomePageState extends State<MyHomePage> {
   //constructor
    _MyHomePageState(this.title);
 
+  void triggerWin() {
+    setState(() {
+      this.size++;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Maze(
         size: this.size,
         accessibleControls: this.accessibleControls,
+        triggerWin: this.triggerWin,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: ()=>setState(() => size++),
