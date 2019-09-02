@@ -4,15 +4,14 @@ import 'package:maze_generator/maze/MazeGenerators.dart';
 import 'dart:math' as Math;
 
 class Maze extends StatefulWidget {
-  Maze({Key key, this.size, this.accessibleControls, this.triggerWin}): super(key: key);
+  Maze.blitz({Key key, this.accessibleControls}): type = 'blitz', super(key: key);
+  Maze.timeRush({Key key, this.accessibleControls}): type = 'time rush', super(key: key);
   //parameters for size and accessibleControls
-  final int size;
   final bool accessibleControls;
-  //parameter for the triggerWin function
-  final Function triggerWin;
+  final String type;
   //the create state function
   @override
-  _MazeState createState() => _MazeState(size, accessibleControls, triggerWin);
+  _MazeState createState() => _MazeState(this.accessibleControls, this.type);
 }
 
 class _MazeState extends State<Maze> {
@@ -22,6 +21,8 @@ class _MazeState extends State<Maze> {
   int size;
   int entrance;
   int exit;
+
+  int currentTarget;
   //tracks the current tile we are in
   int currentTile;
   //tracks the start and current x positions of the current swipe
@@ -29,14 +30,27 @@ class _MazeState extends State<Maze> {
   double yStart;
   double xCurrent;
   double yCurrent;
+  //string to define the type of maze
+  String type;
+  //initializes base sizes
+  final int blitzSize = 5;
+  final int timeRushSize = 15;
   //tracks whether accesible controls or not
   bool accessibleControls;
-  //declares the triggerWin function that will be passed from main
-  final Function triggerWin;
   //a constant reference to a randomizer
   Math.Random randomizer = new Math.Random();
   //constructor
-  _MazeState(this.size, this.accessibleControls, this.triggerWin);
+  _MazeState(this.accessibleControls, this.type) {
+    switch (this.type) {
+      case 'blitz':
+        this.size = this.blitzSize;
+        break;
+      case 'time rush':
+        this.size = this.timeRushSize;
+        break;
+      default:
+    }
+  }
   //generates the initial maze
   @override
   void initState() {
@@ -47,8 +61,17 @@ class _MazeState extends State<Maze> {
   @override
   void didUpdateWidget(Maze oldMaze) {
     //if size changes updates maze
-    if(oldMaze.size != this.widget.size) {
-      this.size = this.widget.size;
+    if(oldMaze.type != this.widget.type) {
+      this.type = this.widget.type;
+      switch (this.type) {
+        case 'blitz':
+          this.size = this.blitzSize;
+          break;
+        case 'time rush':
+          this.size = this.timeRushSize;
+          break;
+        default:
+      }
       this._generateMaze();
     }
     this.accessibleControls = this.widget.accessibleControls;
@@ -56,21 +79,59 @@ class _MazeState extends State<Maze> {
   }
   //fucntion to generate the maze, grab current tile, and start/stop
   void _generateMaze() {
-    //generates the maze
-    List<Map<String, bool>> maze = MazeGenerators.recursiveBacktrack(this.size);
-    //generates the entrance and exit position in top and bottom rows
-    int start = randomizer.nextInt(this.size);
-    int end = maze.length - 1 - randomizer.nextInt(this.size);
-    //opens the walls at entrance and exit
-    maze[start]["up"] = true;
-    maze[start]["moveUp"] = true;
-    maze[end]["down"] = true;
-    //sets the in and out class variables
-    this.entrance = start;
-    this.currentTile = start;
-    this.exit = end;
-    //sets the maze
-    this.maze = maze;
+    //nullifies values to prevent accidental carry over of values
+    this.currentTarget = null;
+    this.currentTarget = null;
+    this.exit = null;
+    this.entrance = null;
+    //switch to generate the proper maze
+    switch (this.type) {
+      case 'blitz':
+        //generates the maze
+        List<Map<String, bool>> maze = MazeGenerators.recursiveBacktrack(this.size);
+        //generates the entrance and exit position in top and bottom rows
+        int start = randomizer.nextInt(this.size);
+        int end = maze.length - 1 - randomizer.nextInt(this.size);
+        //opens the walls at entrance and exit
+        maze[start]["up"] = true;
+        maze[start]["moveUp"] = true;
+        maze[end]["down"] = true;
+        //sets the in and out class variables
+        this.entrance = start;
+        this.currentTile = start;
+        this.exit = end;
+        //sets the maze
+        this.maze = maze;
+        break;
+      case 'time rush':
+        //generates the maze
+        List<Map<String, bool>> maze = MazeGenerators.primsAlgo(this.size);
+        //if current tile is null generates a spot to start
+        if(this.currentTile == null) {
+          this.currentTile = randomizer.nextInt(this.size * this.size);
+        }
+        //ensures that the target generates but ensures its not on the start tile
+        while(this.currentTarget == null || this.currentTarget == this.currentTile) {
+          this.currentTarget = randomizer.nextInt(this.size * this.size);
+        }
+        //assignes the maze
+        this.maze = maze;
+        break;
+      default:
+    }
+  }
+  //when win condition for the maze is met triggers the maze regen
+  void triggerBlitzWin() {
+    setState(() {
+      this.size++;
+      this._generateMaze();
+    });
+  }
+  void triggerTimeRushWin() {
+    setState(() {
+      this.currentTarget = randomizer.nextInt(this.size * this.size);
+      this._generateMaze();
+    });
   }
   //records the inital position of the swipe
   void handleSwipeStart(DragStartDetails details) {
@@ -126,7 +187,7 @@ class _MazeState extends State<Maze> {
           print(maze[this.currentTile]["moveUp"]);
         }
         else if(deltaY > 0 && maze[this.currentTile]["down"] && this.currentTile == this.exit) {
-          this.triggerWin();
+          this.triggerBlitzWin();
         }
         //the swipes y is less than 0 is moving bottom up
         else if(deltaY < 0 && maze[this.currentTile]["up"] && this.currentTile != this.entrance) {
@@ -143,6 +204,9 @@ class _MazeState extends State<Maze> {
       //tracks the new gesture from this starting point
       this.xStart = this.xCurrent;
       this.yStart = this.yCurrent;
+      if(this.currentTile == this.currentTarget) {
+        this.triggerTimeRushWin();
+      }
     }
   }
   //handles the logic of determining directions from the swipe
@@ -191,7 +255,7 @@ class _MazeState extends State<Maze> {
           print(maze[this.currentTile]["moveUp"]);
         }
         else if(deltaY > 0 && maze[this.currentTile]["down"] && this.currentTile == this.exit) {
-          this.triggerWin();
+          this.triggerBlitzWin();
         }
         //the swipes y is less than 0 is moving bottom up
         else if(deltaY < 0 && maze[this.currentTile]["up"]) {
@@ -204,6 +268,10 @@ class _MazeState extends State<Maze> {
           });
           print(maze[this.currentTile]["moveDown"]);
         }
+      }
+      //checks the win state for
+      if(this.currentTile == this.currentTarget) {
+        this.triggerTimeRushWin();
       }
     }
   }
@@ -222,7 +290,12 @@ class _MazeState extends State<Maze> {
             child: GridView.count(
               crossAxisCount: this.size,
               crossAxisSpacing: 0,
-              children: this.maze.map((dir) => Tile(directions: dir)).toList(),
+              children:
+                this.maze
+                    .asMap()
+                    .map((index, dir) => MapEntry<int, Tile>(index, Tile(directions: dir, target: index == this.currentTarget, currentTile: index == this.currentTile)))
+                    .values
+                    .toList(),
               primary: false,
               shrinkWrap: true,
             ),
