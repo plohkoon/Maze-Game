@@ -23,7 +23,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   //initializes the state
-  int size = 5;
   bool accessibleControls = false;
   bool darkMode = false;
   final String title;
@@ -31,34 +30,11 @@ class _MyHomePageState extends State<MyHomePage> {
   int page = 0;
   //constructor
    _MyHomePageState(this.title);
-  //function to trigger win, at the moment just ups the size of the maze and regenerates
-  void triggerWin() {
-    print("player won this one");
-    print(this.size.toString());
-    setState(() {
-      this.size++;
-    });
-  }
   //function for the FAB to toggle darkmode
   void toggleDarkMode() {
     setState(() {
       this.darkMode = !this.darkMode;
     });
-  }
-
-  Widget _generateHome() {
-    return Text("Home");
-  }
-  Widget _generateBlitz() {
-    this.size = 5;
-    return Maze(
-            size: this.size,
-            accessibleControls: this.accessibleControls,
-            triggerWin: this.triggerWin,
-          );
-  }
-  Widget _generateTimeRush() {
-    return Text("Time Rush");
   }
   
   @override
@@ -104,12 +80,12 @@ class _MyHomePageState extends State<MyHomePage> {
           //the maze is the body of the app
           body: [
             Text("Home"),
-            Maze(
-              size: this.size,
+            Maze.blitz(
               accessibleControls: this.accessibleControls,
-              triggerWin: this.triggerWin,
             ),
-            Text("Time Rush")
+            Maze.timeRush(
+              accessibleControls: this.accessibleControls,
+            )
           ][page],
           //FAB to change from light to dark mode
           floatingActionButton: FloatingActionButton(
