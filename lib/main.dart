@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maze_generator/ColorSlider/ColorSlider.dart';
 import 'package:maze_generator/maze/Maze.dart';
 
 void main() => runApp(MyApp());
@@ -26,14 +27,16 @@ class _MyHomePageState extends State<MyHomePage> {
   bool accessibleControls = false;
   bool darkMode = false;
   final String title;
-
+  //index of color to use
+  int currentColor = 0;
+  //page that currently on, 0 is home
   int page = 0;
   //constructor
    _MyHomePageState(this.title);
-  //function for the FAB to toggle darkmode
-  void toggleDarkMode() {
+  //function to set the index of color to use in Colors.primaries
+  void setColor(index) {
     setState(() {
-      this.darkMode = !this.darkMode;
+      this.currentColor = index.toInt();
     });
   }
   
@@ -42,16 +45,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       title: this.title,
       //theme data toggles with dark mode toggle
-      theme: darkMode ? 
-        ThemeData(
-          primarySwatch: Colors.grey,
-          primaryColor: Colors.deepOrange,
-          scaffoldBackgroundColor: Colors.black
-        ):
-        ThemeData(
-          primarySwatch: Colors.blue,
-          primaryColor: Colors.red,
-        ),
+      theme: ThemeData (
+        primarySwatch: Colors.primaries[this.currentColor.toInt()]
+      ),
       home: SafeArea(
         child: Scaffold(
           //appBar that contains the title and accessibility controls
@@ -79,7 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           //the maze is the body of the app
           body: [
-            Text("Home"),
+            ColorSlider(
+              currentValue: currentColor,
+              setColor: setColor,
+            ),
             Maze.blitz(
               accessibleControls: this.accessibleControls,
             ),
@@ -87,20 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
               accessibleControls: this.accessibleControls,
             )
           ][page],
-          //FAB to change from light to dark mode
-          floatingActionButton: FloatingActionButton(
-            //passes the function
-            onPressed: this.toggleDarkMode,
-            //changes the icon depending on if we are in dark mode
-            child: this.darkMode ?
-            Icon(
-              Icons.brightness_3
-            ):
-            Icon(
-              Icons.brightness_5,
-            ),
-          ),
-          //will eventually be a navBar to switch between modes
+          //NavBar to switch between game modes and menu
           bottomNavigationBar: BottomNavigationBar(
             onTap: (index) {
               print(index);
