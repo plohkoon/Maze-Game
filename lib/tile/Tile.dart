@@ -3,16 +3,20 @@ import 'package:flutter/rendering.dart';
 
 class Tile extends StatefulWidget {
   final Map<String, bool> directions;
-  Tile({Key key, @required this.directions}): super(key: key);
+  final bool target;
+  final bool currentTile;
+  Tile({Key key, @required this.directions, this.target, this.currentTile}): super(key: key);
 
-  _TileState createState() => _TileState(directions: directions);
+  _TileState createState() => _TileState(directions: directions, target: this.target, currentTile: this.currentTile);
 }
 
 class _TileState extends State<Tile> {
   //defines things being passed to the state
   Map<String, bool> directions;
+  bool target;
+  bool currentTile;
   //constructor
-  _TileState({@required this.directions});
+  _TileState({@required this.directions, this.target, this.currentTile});
   //3 lists to define the look of the player path in the tile
   List<Alignment> tileAlignment = new List<Alignment>.generate(2, (i) => Alignment.center);
   List<double> widths = new List<double>.generate(2, (i) => 0);
@@ -27,6 +31,8 @@ class _TileState extends State<Tile> {
   @override
   void didUpdateWidget(Tile oldWidget) {
     this.directions = this.widget.directions;
+    this.target = this.widget.target;
+    this.currentTile = this.widget.currentTile;
     this._updateMoves();
     super.didUpdateWidget(oldWidget);
   }
@@ -85,6 +91,28 @@ class _TileState extends State<Tile> {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
+        //fills a dot in the center of the current tile
+        Positioned.fill(
+          child: FractionallySizedBox(
+            alignment: Alignment.center,
+            heightFactor: 0.2,
+            widthFactor: 0.2,
+            child: Container(
+              color: currentTile ? Theme.of(context).primaryColorDark : null,
+            )
+          ),
+        ),
+        //fills out the color of the target
+        Positioned.fill(
+          child: FractionallySizedBox (
+            alignment: Alignment.center,
+            heightFactor: 1,
+            widthFactor: 1,
+            child: Container(
+              color: this.target ? Theme.of(context).primaryColorDark : null
+            ),
+          ),
+        ),
         //left wall extends from bottom left to the up
         Positioned.fill(
           child: FractionallySizedBox(
@@ -158,7 +186,7 @@ class _TileState extends State<Tile> {
               color: Theme.of(context).primaryColorDark,
             ),
           ),
-        )
+        ),
       ],
     );
   }
