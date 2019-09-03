@@ -45,8 +45,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       title: this.title,
       //theme data toggles with dark mode toggle
-      theme: ThemeData (
-        primarySwatch: Colors.primaries[this.currentColor.toInt()]
+      theme: this.darkMode ?
+      ThemeData (
+        primarySwatch: Colors.primaries[this.currentColor.toInt()],
+        scaffoldBackgroundColor: Colors.blueGrey[900],
+      ) :
+      ThemeData(
+        primarySwatch: Colors.primaries[this.currentColor.toInt()],
+        scaffoldBackgroundColor: Colors.blueGrey[200],
       ),
       home: SafeArea(
         child: Scaffold(
@@ -75,9 +81,17 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           //the maze is the body of the app
           body: [
-            ColorSlider(
-              currentValue: currentColor,
-              setColor: setColor,
+            Row(
+              children: [
+                ColorSlider(
+                  currentValue: currentColor,
+                  setColor: setColor,
+                ),
+                Switch(
+                  value: this.darkMode,
+                  onChanged: (bool newVal) => setState(() => this.darkMode = !this.darkMode)
+                )
+              ],
             ),
             Maze.blitz(
               accessibleControls: this.accessibleControls,
@@ -109,6 +123,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text("Time Rush"),
               ),
             ],
+            backgroundColor: this.darkMode ? Colors.blueGrey[800] : Colors.blueGrey[300],
+            unselectedItemColor: this.darkMode ? Colors.blueGrey[300] : Colors.blueGrey[800],
           ),
         ),
       ),

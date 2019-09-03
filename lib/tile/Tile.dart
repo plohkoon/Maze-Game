@@ -89,7 +89,8 @@ class _TileState extends State<Tile> {
   //builds the widget
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Container(
+    child: Stack(
       children: <Widget>[
         //fills a dot in the center of the current tile
         Positioned.fill(
@@ -188,6 +189,8 @@ class _TileState extends State<Tile> {
           ),
         ),
       ],
+    ),
+    color: Theme.of(context).primaryColorLight
     );
   }
 }
