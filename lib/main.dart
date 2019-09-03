@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   //constructor
    _MyHomePageState(this.title);
   //function to set the index of color to use in Colors.primaries
-  void setColor(index) {
+  void setColor(int index) {
     setState(() {
       this.currentColor = index.toInt();
     });
@@ -83,9 +83,11 @@ class _MyHomePageState extends State<MyHomePage> {
           body: [
             Row(
               children: [
-                ColorSlider(
-                  currentValue: currentColor,
-                  setColor: setColor,
+                Expanded(
+                  child: ColorSlider(
+                    currentValue: currentColor,
+                    setColor: setColor,
+                  ),
                 ),
                 Switch(
                   value: this.darkMode,
