@@ -1,56 +1,107 @@
 import 'package:flutter/material.dart';
 
 class ColorSlider extends StatefulWidget {
+  //initializes the current value, colors list and setColor functions
   final int currentValue;
   final Function setColor;
-  ColorSlider({Key key, this.currentValue, this.setColor}) : super(key: key);
+  final List<Color> colors;
+  //constructor
+  ColorSlider({
+    Key key,
+    @required this.currentValue,
+    @required this.setColor,
+    this.colors = Colors.primaries,
+  }) : super(key: key);
   @override
-  _ColorSliderState createState() => _ColorSliderState(currentColor: this.currentValue, setColor: this.setColor);
+  _ColorSliderState createState() => _ColorSliderState(
+    currentColor: this.currentValue,
+    setColor: this.setColor,
+    colors: this.colors,
+  );
 }
 
 class _ColorSliderState extends State<ColorSlider> {
   //keeps track of the current color and the function to set the color
   int currentColor;
   Function setColor;
+  List<Color> colors;
   //Constructor
-  _ColorSliderState({this.currentColor, this.setColor});
-  //initializes the value for the slider
-  double currentValue;
+  _ColorSliderState({this.currentColor, this.setColor, this.colors});
 
   @override
-  void initState() {
-    //sets the value and the color
-    this.currentValue = this.widget.currentValue.toDouble();
-    this.currentColor = this.widget.currentValue;
-    super.initState();
-  }
-  @override
   void didUpdateWidget(ColorSlider oldWidget) {
-    //sets the value and the color
-    this.currentValue = this.widget.currentValue.toDouble();
+    //sets the current index of color
     this.currentColor = this.widget.currentValue;
+    //updates color array
+    this.colors = this.widget.colors;
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    //builds the custom theme for the slider
-    return Theme(
-      data: ThemeData(
-        sliderTheme: SliderThemeData(
-          showValueIndicator: ShowValueIndicator.always,
-          valueIndicatorColor: Colors.primaries[this.currentValue.toInt()],
-        )
-      ),
-      //builds the slider
-      child: Slider(
-        value: this.currentValue,
-        min: 0,
-        max: Colors.primaries.length.toDouble() - 1,
-        divisions: Colors.primaries.length - 1,
-        onChanged: (index) => setState(() => this.currentValue=index),
-        onChangeEnd: (index) => setColor(this.currentValue),
-      ),
+    //builds the custom color slider
+    return LayoutBuilder(
+      builder: (context, boxSize) {
+        //calculates the size of each individual color square
+        double size = boxSize.maxWidth / colors.length;
+        return GestureDetector(
+          //stack to allow the current selection indicators to overlay slightly with
+          child: Stack(
+            children: [
+              Container(
+                child: Row(
+                  //maps the colors in the array to children
+                  children: this.colors
+                                .map((color) => Container(
+                                    color: color,
+                                    height: size,
+                                    width: size,
+                                  )
+                                )
+                                .toList()
+                ),
+                //sets the top margin of the color bar to allow for overlay with the icons
+                margin: EdgeInsets.only(
+                  top: size * 0.5,
+                ),
+              ),
+              Container(
+                child: Icon(Icons.arrow_drop_down, size: size,),
+                height: size,
+                width: size,
+                margin: EdgeInsets.only(
+                  left: this.currentColor * size,
+                ),
+              ),
+              Container(
+                child: Icon(Icons.arrow_drop_up, size: size,),
+                height: size,
+                width: size,
+                margin: EdgeInsets.only(
+                  left: this.currentColor * size,
+                  top: size * 0.5 * 2,
+                ),
+              ),
+            ],
+          ),
+          //when user taps and starts pan updates color
+          onPanStart: (DragStartDetails details) {
+            //ensures that no weirdness with position can occur
+            if(details.localPosition.dx < boxSize.maxWidth && details.localPosition.dx > 0) {
+              int currentColor = (details.localPosition.dx ~/ size).toInt();
+              this.setColor(currentColor);
+            }
+          },
+          //when user pans proceeds to update color
+          onPanUpdate: (DragUpdateDetails details) {
+            //ensures that no weirdness with position can occur
+            if(details.localPosition.dx < boxSize.maxWidth && details.localPosition.dx > 0) {
+              int currentColor = (details.localPosition.dx ~/ size).toInt();
+              this.setColor(currentColor);
+            }
+          },
+        );
+      }
     );
   }
 }
