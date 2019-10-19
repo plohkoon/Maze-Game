@@ -21,6 +21,19 @@ class _HomeState extends State<Home> {
   bool darkMode;
   Function setDark;
 
+  Map<String,List<DateTime>> data = {
+    "Blitz": [
+      new DateTime(0,0,0,0,15,5,10),
+      new DateTime(0,0,0,0,15,5,10),
+      new DateTime(0,0,0,0,15,5,10)
+    ],
+    "Time Rush": [
+      new DateTime(0,0,0,0,30,20,10),
+      new DateTime(0,0,0,0,30,20,10),
+      new DateTime(0,0,0,0,30,20,10),
+    ]
+  };
+
   _HomeState(this.currentColor, this.setColor, this.darkMode, this.setDark);
 
   @override
@@ -35,40 +48,45 @@ class _HomeState extends State<Home> {
     return Column(
       children: <Widget>[
         Expanded(
-          child: Column(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //maps the data to the children
             children: <Widget>[
               Expanded(
-                child: Row(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Text("Difficulty"),
-                    Text("Blitz"),
-                    Text("Time Rush")
-                  ],
-                )
-              ),
-              Expanded(
-                child: Row(
-                  children: <Widget>[
-                    Text("Easy")
-                  ],
-                )
-              ),
-              Expanded(
-                child: Row(
-                  children: <Widget> [
-                    Text("Medium")
-                  ]
-                )
-              ),
-              Expanded(
-                child: Row(
-                  children: <Widget>[
+                    Text("Easy"),
+                    Text("Medium"),
                     Text("Hard")
                   ],
                 )
               )
-            ],
-          )
+            ] + data.map((type, data){
+              return MapEntry<String, Widget>(
+                type,
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[Text(type)] + data.map((DateTime value) => Text(value.toString())).toList()
+                  )
+                )
+              );
+            }).values.toList()
+            /*<Widget>[
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Container(height: 100, width: 100, color: Colors.black),
+                    Container(height: 100, width: 100, color: Colors.black),
+                    Container(height: 100, width: 100, color: Colors.black),
+                  ],
+                )
+              )
+            ],*/
+          ),
         ),
         Row(
           children: [
