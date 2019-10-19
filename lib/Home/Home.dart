@@ -57,9 +57,20 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Text("Difficulty"),
-                    Text("Easy"),
-                    Text("Medium"),
-                    Text("Hard")
+                    RaisedButton(
+                      child: Text("Easy"),
+                      color: Theme.of(buildContext).primaryColor,
+                      disabledColor: Theme.of(buildContext).primaryColor,
+                      onPressed: null,
+                    ),
+                    RaisedButton(
+                      child: Text("Medium"),
+                      onPressed: null
+                    ),
+                    RaisedButton(
+                      child: Text("Hard"),
+                      onPressed: null
+                    ),
                   ],
                 )
               )
