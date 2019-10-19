@@ -55,10 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ThemeData (
         primarySwatch: Colors.primaries[this.currentColor.toInt()],
         scaffoldBackgroundColor: Colors.blueGrey[900],
+        textTheme: Typography.whiteMountainView
       ) :
       ThemeData(
         primarySwatch: Colors.primaries[this.currentColor.toInt()],
         scaffoldBackgroundColor: Colors.blueGrey[200],
+        textTheme: Typography.blackMountainView
       ),
       home: SafeArea(
         child: Scaffold(
