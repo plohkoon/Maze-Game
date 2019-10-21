@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maze_generator/ColorSlider/ColorSlider.dart';
+import 'package:maze_generator/Home/Home.dart';
 import 'package:maze_generator/maze/Maze.dart';
 
 void main() => runApp(MyApp());
@@ -39,6 +39,12 @@ class _MyHomePageState extends State<MyHomePage> {
       this.currentColor = index.toInt();
     });
   }
+
+  void setDark(bool newVal) {
+    setState(() {
+      this.darkMode = !this.darkMode;
+    });
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -49,10 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ThemeData (
         primarySwatch: Colors.primaries[this.currentColor.toInt()],
         scaffoldBackgroundColor: Colors.blueGrey[900],
+        textTheme: Typography.whiteMountainView
       ) :
       ThemeData(
         primarySwatch: Colors.primaries[this.currentColor.toInt()],
         scaffoldBackgroundColor: Colors.blueGrey[200],
+        textTheme: Typography.blackMountainView
       ),
       home: SafeArea(
         child: Scaffold(
@@ -81,19 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           //the maze is the body of the app
           body: [
-            Row(
-              children: [
-                Expanded(
-                  child: ColorSlider(
-                    currentColor: currentColor,
-                    setColor: setColor,
-                  ),
-                ),
-                Switch(
-                  value: this.darkMode,
-                  onChanged: (bool newVal) => setState(() => this.darkMode = !this.darkMode)
-                )
-              ],
+            Home(
+              currentColor: this.currentColor,
+              setColor: this.setColor,
+              darkMode: this.darkMode,
+              setDark: this.setDark
             ),
             Maze.blitz(
               accessibleControls: this.accessibleControls,
