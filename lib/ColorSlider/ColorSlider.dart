@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 
 class ColorSlider extends StatefulWidget {
   //initializes the current value, colors list and setColor functions
-  final int currentValue;
+  final int currentColor;
   final Function setColor;
   final List<Color> colors;
   //constructor
   ColorSlider({
     Key key,
-    @required this.currentValue,
+    @required this.currentColor,
     @required this.setColor,
     this.colors = Colors.primaries,
   }) : super(key: key);
   @override
   _ColorSliderState createState() => _ColorSliderState(
-    currentColor: this.currentValue,
+    currentColor: this.currentColor,
     setColor: this.setColor,
     colors: this.colors,
   );
@@ -31,7 +31,7 @@ class _ColorSliderState extends State<ColorSlider> {
   @override
   void didUpdateWidget(ColorSlider oldWidget) {
     //sets the current index of color
-    this.currentColor = this.widget.currentValue;
+    this.currentColor = this.widget.currentColor;
     //updates color array
     this.colors = this.widget.colors;
     super.didUpdateWidget(oldWidget);

@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Expanded(
                   child: ColorSlider(
-                    currentValue: currentColor,
+                    currentColor: currentColor,
                     setColor: setColor,
                   ),
                 ),
@@ -125,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text("Time Rush"),
               ),
             ],
-            backgroundColor: this.darkMode ? Colors.blueGrey[800] : Colors.blueGrey[300],
+            backgroundColor: this.darkMode ? Colors.blueGrey[800] : null,
             unselectedItemColor: this.darkMode ? Colors.blueGrey[300] : Colors.blueGrey[800],
           ),
         ),
