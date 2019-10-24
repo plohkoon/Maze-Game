@@ -103,7 +103,7 @@ class _HomeState extends State<Home> {
           children: [
             Expanded(
               child: ColorSlider(
-                currentValue: currentColor,
+                currentColor: currentColor,
                 setColor: setColor,
               ),
             ),
