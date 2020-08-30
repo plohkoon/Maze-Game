@@ -1,25 +1,16 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:maze_generator/ColorSlider/ColorSlider.dart';
+import 'package:maze_generator/Customizations/ColorSlider.dart';
+import 'package:maze_generator/Customizations/ToggleDark.dart';
 
 class Home extends StatefulWidget {
-  final int currentColor;
-  final Function setColor;
-  final bool darkMode;
-  final Function setDark;
+  Home({Key key}): super(key:key);
 
-  Home({Key key, this.currentColor, this.setColor, this.darkMode, this.setDark}): super(key:key);
-
-  _HomeState createState () => _HomeState(this.currentColor, this.setColor, this.darkMode, this.setDark);
+  _HomeState createState () => _HomeState();
 }
-
+// TODO Can this be stateless?
 class _HomeState extends State<Home> {
-
-  int currentColor;
-  Function setColor;
-  bool darkMode;
-  Function setDark;
 
   Map<String,List<DateTime>> data = {
     "Blitz": [
@@ -33,16 +24,6 @@ class _HomeState extends State<Home> {
       new DateTime(0,0,0,0,30,20,10),
     ]
   };
-
-  _HomeState(this.currentColor, this.setColor, this.darkMode, this.setDark);
-
-  @override
-  void didUpdateWidget(Home oldWidget) {
-    this.currentColor = this.widget.currentColor;
-    this.darkMode = this.widget.darkMode;
-
-    super.didUpdateWidget(oldWidget);
-  }
 
   Widget build(BuildContext buildContext) {
     return Column(
@@ -104,10 +85,7 @@ class _HomeState extends State<Home> {
             Expanded(
               child: ColorSlider(),
             ),
-            Switch(
-              value: this.darkMode,
-              onChanged: this.setDark
-            )
+            ToggleDark()
           ],
         ),
       ],

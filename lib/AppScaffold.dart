@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:maze_generator/Customizations/ToggleAccessible.dart';
 
 import 'package:maze_generator/maze/Maze.dart';
 import 'package:maze_generator/Home/Home.dart';
 
 class AppScaffold extends StatefulWidget {
-  AppScaffold({Key key}) : super(key: key);
+  final String title;
+  AppScaffold({Key key, this.title}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AppScaffoldState();
+  State<StatefulWidget> createState() => _AppScaffoldState(this.title);
 }
 
 class _AppScaffoldState extends State<AppScaffold> with SingleTickerProviderStateMixin {
   // TODO use the fucking streams idiot
   bool accessibleControls = false;
-  bool darkMode = false;
-  String title = 'test';
+  String title;
   int page = 0;
+
+  _AppScaffoldState(this.title);
 
   @override
   Widget build(BuildContext context) {
@@ -26,32 +29,15 @@ class _AppScaffoldState extends State<AppScaffold> with SingleTickerProviderStat
           title: Row(
             children: [
               Text(this.title),
-              Expanded(child: Row(),),
+              Expanded(child: Row()),
               //renders accessibility controls label and a switch to toggle it
-              Row(
-                children: [
-                  Text("Accessibility Controls"),
-                  Switch(
-                    value: accessibleControls,
-                    onChanged: (bool newVal) {
-                      setState(() {
-                        this.accessibleControls = !this.accessibleControls;
-                      });
-                    },
-                  ),
-                ],
-              ),
+              ToggleAccessible()
             ],
           ),
         ),
         //the maze is the body of the app
         body: [
-          Home(
-            currentColor: 0,
-            setColor: (bool temp) {},
-            darkMode: this.darkMode,
-            setDark: (bool temp) {}
-          ),
+          Home(),
           Maze.blitz(
             accessibleControls: this.accessibleControls,
           ),
@@ -82,8 +68,9 @@ class _AppScaffoldState extends State<AppScaffold> with SingleTickerProviderStat
               title: Text("Time Rush"),
             ),
           ],
-          backgroundColor: this.darkMode ? Colors.blueGrey[800] : null,
-          unselectedItemColor: this.darkMode ? Colors.blueGrey[300] : Colors.blueGrey[800],
+          // TODO why is this not off of the theme?
+          backgroundColor: Colors.blueGrey[800],
+          unselectedItemColor: Colors.blueGrey[300],
         ),
       )
     );

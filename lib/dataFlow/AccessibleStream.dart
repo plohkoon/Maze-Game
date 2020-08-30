@@ -12,7 +12,7 @@ class AccessibleStream {
     return _accessible;
   }
 
-  static void toggleDarkMode() {
+  static void toggleAccessible() {
     _accessible = !_accessible;
     _controller.add(_accessible);
   }
