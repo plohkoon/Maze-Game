@@ -102,10 +102,7 @@ class _HomeState extends State<Home> {
         Row(
           children: [
             Expanded(
-              child: ColorSlider(
-                currentColor: currentColor,
-                setColor: setColor,
-              ),
+              child: ColorSlider(),
             ),
             Switch(
               value: this.darkMode,
