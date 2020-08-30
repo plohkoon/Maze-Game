@@ -1,21 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:maze_generator/dataFlow/ColorStream.dart';
 
 class ColorSlider extends StatefulWidget {
   //initializes the current value, colors list and setColor functions
-  final int currentColor;
-  final Function setColor;
   final List<Color> colors;
   //constructor
   ColorSlider({
     Key key,
-    @required this.currentColor,
-    @required this.setColor,
     this.colors = Colors.primaries,
   }) : super(key: key);
   @override
   _ColorSliderState createState() => _ColorSliderState(
-    currentColor: this.currentColor,
-    setColor: this.setColor,
     colors: this.colors,
   );
 }
@@ -23,18 +20,35 @@ class ColorSlider extends StatefulWidget {
 class _ColorSliderState extends State<ColorSlider> {
   //keeps track of the current color and the function to set the color
   int currentColor;
-  Function setColor;
+  StreamSubscription colorListener;
   List<Color> colors;
   //Constructor
-  _ColorSliderState({this.currentColor, this.setColor, this.colors});
+  _ColorSliderState({this.colors});
 
   @override
-  void didUpdateWidget(ColorSlider oldWidget) {
-    //sets the current index of color
-    this.currentColor = this.widget.currentColor;
-    //updates color array
-    this.colors = this.widget.colors;
-    super.didUpdateWidget(oldWidget);
+  void initState() {
+    if(this.colors != Colors.primaries) ColorStream.setColor(colors[0]);
+    currentColor = this.colors.indexOf(ColorStream.color);
+    this.colorListener = ColorStream.makeListener((Color newColor) {
+      setState(() {
+        this.currentColor = this.colors.indexOf(ColorStream.color);
+      });
+    }, this.colorListener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    this.colorListener.cancel();
+    super.dispose();
+  }
+
+  void setColor(Offset offset, BoxConstraints boxSize) {
+    double size = boxSize.maxWidth / colors.length;
+    if(offset.dx < boxSize.maxWidth && offset.dx > 0) {
+      int currentColor = (offset.dx ~/ size).toInt();
+      ColorStream.setColor(this.colors[currentColor]);
+    }
   }
 
   @override
@@ -85,21 +99,9 @@ class _ColorSliderState extends State<ColorSlider> {
             ],
           ),
           //when user taps and starts pan updates color
-          onPanStart: (DragStartDetails details) {
-            //ensures that no weirdness with position can occur
-            if(details.localPosition.dx < boxSize.maxWidth && details.localPosition.dx > 0) {
-              int currentColor = (details.localPosition.dx ~/ size).toInt();
-              this.setColor(currentColor);
-            }
-          },
+          onPanStart: (DragStartDetails details) => setColor(details.localPosition, boxSize),
           //when user pans proceeds to update color
-          onPanUpdate: (DragUpdateDetails details) {
-            //ensures that no weirdness with position can occur
-            if(details.localPosition.dx < boxSize.maxWidth && details.localPosition.dx > 0) {
-              int currentColor = (details.localPosition.dx ~/ size).toInt();
-              this.setColor(currentColor);
-            }
-          },
+          onPanUpdate: (DragUpdateDetails details)  => setColor(details.localPosition, boxSize)
         );
       }
     );
