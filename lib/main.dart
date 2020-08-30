@@ -2,63 +2,54 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:maze_generator/AppScaffold.dart';
-import 'package:maze_generator/dataFlow/AccessibleStream.dart';
 import 'package:maze_generator/dataFlow/ColorStream.dart';
 import 'package:maze_generator/dataFlow/DarkModeStream.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MazeGame());
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MyHomePage(
-      title: "Maze Game"
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  
-  final String title;
+class MazeGame extends StatefulWidget {
+  MazeGame({Key key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState(this.title);
+  _MazeGameState createState() => _MazeGameState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MazeGameState extends State<MazeGame> {
   //initializes the state
-  final String title;
+  final String title = 'Maze Game';
   //index of color to use
   Color currentColor;
   StreamSubscription colorListener;
-  bool accessibleControls;
-  StreamSubscription accessibleListener;
   bool darkMode;
   StreamSubscription darkListener;
 
   TabController pageController;
   //constructor
-   _MyHomePageState(this.title) {
-     currentColor = ColorStream.color;
-     darkMode = DarkModeStream.darkMode;
-   }
+  _MazeGameState() {
+  }
 
-   @override
+  @override
   void initState() {
-    // TODO: implement initState
+    // init streams
+    currentColor = ColorStream.color;
+    darkMode = DarkModeStream.darkMode;
+    this.colorListener = ColorStream.makeListener((Color newColor) {
+      setState(() {
+        this.currentColor = newColor;
+      });
+    }, this.colorListener);
+    this.darkListener = DarkModeStream.makeListener((bool isDark) {
+      setState(() {
+        this.darkMode = isDark;
+      });
+    }, this.darkListener);
     super.initState();
   }
 
   @override
-  void didUpdateWidget(MyHomePage oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   void dispose() {
-    // TODO: implement dispose
+    this.colorListener.cancel();
+    this.darkListener.cancel();
     super.dispose();
   }
   
