@@ -34,8 +34,10 @@ class _MazeState extends State<Maze> {
   //string to define the type of maze
   String type;
   //initializes base sizes
-  final int blitzSize = 5;
-  final int timeRushSize = 15;
+  //7-10-12
+  final int blitzSize = 12;
+  //8-10-12
+  final int timeRushSize = 12;
   //tracks whether accesible controls or not
   bool accessibleControls;
   StreamSubscription accessibleStream;
