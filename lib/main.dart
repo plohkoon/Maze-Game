@@ -24,9 +24,6 @@ class _MazeGameState extends State<MazeGame> {
   StreamSubscription darkListener;
 
   TabController pageController;
-  //constructor
-  _MazeGameState() {
-  }
 
   @override
   void initState() {
@@ -70,7 +67,7 @@ class _MazeGameState extends State<MazeGame> {
         textTheme: Typography.blackMountainView
       ),
       home: SafeArea(
-        child: AppScaffold()
+        child: AppScaffold(title: title)
       ),
     );
   }
