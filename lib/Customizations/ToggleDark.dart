@@ -2,7 +2,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:maze_generator/dataFlow/DarkModeStream.dart';
+import 'package:maze_generator/data_streams.dart';
 
 class ToggleDark extends StatefulWidget {
   @override
@@ -15,8 +15,8 @@ class _ToggleDarkState extends State<ToggleDark> {
 
   @override
   void initState() {
-    darkMode = DarkModeStream.darkMode;
-    this.darkModeListener = DarkModeStream.makeListener((bool isDark) {
+    darkMode = darkModeStream.value;
+    this.darkModeListener = darkModeStream.makeListener((bool isDark) {
       setState(() {
         this.darkMode = isDark;
       });
@@ -33,7 +33,7 @@ class _ToggleDarkState extends State<ToggleDark> {
   Widget build(BuildContext context) {
     return Switch(
       value: this.darkMode,
-      onChanged: (_) => DarkModeStream.toggleDarkMode()
+      onChanged: (_) => darkModeStream.toggle()
     );
   }
 }

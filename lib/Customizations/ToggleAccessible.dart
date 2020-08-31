@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:maze_generator/dataFlow/AccessibleStream.dart';
+import 'package:maze_generator/data_streams.dart';
 
 class ToggleAccessible extends StatefulWidget {
   @override
@@ -10,22 +10,22 @@ class ToggleAccessible extends StatefulWidget {
 
 class _ToggleAccessibleState extends State<ToggleAccessible> {
   bool isAccessible;
-  StreamSubscription accessibleStream;
+  StreamSubscription accessibleListener;
 
   @override
   void initState() {
-    isAccessible = AccessibleStream.accessible;
-    accessibleStream = AccessibleStream.makeListener((bool isAccessible) {
+    isAccessible = accessibleStream.value;
+    accessibleListener = accessibleStream.makeListener((bool isAccessible) {
       setState(() {
         this.isAccessible = isAccessible;
       });
-    }, this.accessibleStream);
+    }, this.accessibleListener);
     super.initState();
   }
 
   @override
   void dispose() {
-    this.accessibleStream.cancel();
+    this.accessibleListener.cancel();
     super.dispose();
   }
 
@@ -36,7 +36,7 @@ class _ToggleAccessibleState extends State<ToggleAccessible> {
         Text("Accessibility Controls"),
         Switch(
           value: this.isAccessible,
-          onChanged: (_) => AccessibleStream.toggleAccessible()
+          onChanged: (_) => accessibleStream.toggle()
         )
       ],
     );

@@ -1,6 +1,9 @@
+library data_streams;
+
 import 'dart:async';
-// TODO Potentially use this
-class DataStream<T> {
+import 'package:flutter/material.dart';
+
+class _DataStream<T> {
 
   StreamController<T> _controller = new StreamController.broadcast();
   T _value;
@@ -24,8 +27,15 @@ class DataStream<T> {
   }
 }
 
-class ToggleStream extends DataStream<bool> {
+class _ToggleStream extends _DataStream<bool> {
+  _ToggleStream(bool initialValue) {
+    this._value = initialValue;
+  }
   void toggle() {
     this.setValue(!_value);
   }
 }
+// TODO somehow store these states
+final _ToggleStream accessibleStream = _ToggleStream(false);
+final _ToggleStream darkModeStream = _ToggleStream(false);
+final _DataStream<Color> colorStream = _DataStream<Color>();

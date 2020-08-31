@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:maze_generator/AppScaffold.dart';
-import 'package:maze_generator/dataFlow/ColorStream.dart';
-import 'package:maze_generator/dataFlow/DarkModeStream.dart';
+import 'package:maze_generator/data_streams.dart';
 
 void main() => runApp(MazeGame());
 
@@ -26,14 +25,14 @@ class _MazeGameState extends State<MazeGame> {
   @override
   void initState() {
     // init streams
-    currentColor = ColorStream.color;
-    darkMode = DarkModeStream.darkMode;
-    this.colorListener = ColorStream.makeListener((Color newColor) {
+    currentColor = colorStream.value;
+    darkMode = darkModeStream.value;
+    this.colorListener = colorStream.makeListener((Color newColor) {
       setState(() {
         this.currentColor = newColor;
       });
     }, this.colorListener);
-    this.darkListener = DarkModeStream.makeListener((bool isDark) {
+    this.darkListener = darkModeStream.makeListener((bool isDark) {
       setState(() {
         this.darkMode = isDark;
       });

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:maze_generator/dataFlow/AccessibleStream.dart';
+import 'package:maze_generator/data_streams.dart';
 import 'package:maze_generator/tile/Tile.dart';
 import 'package:maze_generator/maze/MazeGenerators.dart';
 import 'dart:math' as Math;
@@ -40,7 +40,7 @@ class _MazeState extends State<Maze> {
   final int timeRushSize = 12;
   //tracks whether accesible controls or not
   bool accessibleControls;
-  StreamSubscription accessibleStream;
+  StreamSubscription accessibleListener;
   //a constant reference to a randomizer
   Math.Random randomizer = new Math.Random();
   //constructor
@@ -59,12 +59,12 @@ class _MazeState extends State<Maze> {
   @override
   void initState() {
     this._generateMaze();
-    accessibleControls = AccessibleStream.accessible;
-    accessibleStream = AccessibleStream.makeListener((bool isAccessible) {
+    accessibleControls = accessibleStream.value;
+    accessibleListener = accessibleStream.makeListener((bool isAccessible) {
       setState(() {
         accessibleControls = isAccessible;
       });
-    }, accessibleStream);
+    }, accessibleListener);
     super.initState();
   }
   //when the size updates updates the internal size
@@ -89,7 +89,7 @@ class _MazeState extends State<Maze> {
 
   @override
   void dispose() {
-    accessibleStream.cancel();
+    accessibleListener.cancel();
     super.dispose();
   }
   //fucntion to generate the maze, grab current tile, and start/stop

@@ -1,16 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:maze_generator/dataFlow/ColorStream.dart';
+import 'package:maze_generator/data_streams.dart';
 
 class ColorSlider extends StatefulWidget {
-  //initializes the current value, colors list and setColor functions
   final List<Color> colors;
-  //constructor
+
   ColorSlider({
     Key key,
     this.colors = Colors.primaries,
   }) : super(key: key);
+
   @override
   _ColorSliderState createState() => _ColorSliderState(
     colors: this.colors,
@@ -27,11 +27,16 @@ class _ColorSliderState extends State<ColorSlider> {
 
   @override
   void initState() {
-    if(this.colors != Colors.primaries) ColorStream.setColor(colors[0]);
-    currentColor = this.colors.indexOf(ColorStream.color);
-    this.colorListener = ColorStream.makeListener((Color newColor) {
+    // Tries to find the current color otherwise sets it to the first index
+    currentColor = this.colors.indexOf(colorStream.value);
+    if(this.colors != Colors.primaries || currentColor < 0) {
+      currentColor = 0;
+      colorStream.setValue(colors[0]);
+    }
+
+    this.colorListener = colorStream.makeListener((Color newColor) {
       setState(() {
-        this.currentColor = this.colors.indexOf(ColorStream.color);
+        this.currentColor = this.colors.indexOf(colorStream.value);
       });
     }, this.colorListener);
     super.initState();
@@ -47,7 +52,7 @@ class _ColorSliderState extends State<ColorSlider> {
     double size = boxSize.maxWidth / colors.length;
     if(offset.dx < boxSize.maxWidth && offset.dx > 0) {
       int currentColor = (offset.dx ~/ size).toInt();
-      ColorStream.setColor(this.colors[currentColor]);
+      colorStream.setValue(this.colors[currentColor]);
     }
   }
 
