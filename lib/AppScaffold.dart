@@ -13,8 +13,6 @@ class AppScaffold extends StatefulWidget {
 }
 
 class _AppScaffoldState extends State<AppScaffold> with SingleTickerProviderStateMixin {
-  // TODO use the fucking streams idiot
-  bool accessibleControls = false;
   String title;
   int page = 0;
 
@@ -38,12 +36,8 @@ class _AppScaffoldState extends State<AppScaffold> with SingleTickerProviderStat
         //the maze is the body of the app
         body: [
           Home(),
-          Maze.blitz(
-            accessibleControls: this.accessibleControls,
-          ),
-          Maze.timeRush(
-            accessibleControls: this.accessibleControls,
-          )
+          Maze.blitz(),
+          Maze.timeRush()
         ][page],
         //NavBar to switch between game modes and menu
         bottomNavigationBar: BottomNavigationBar(

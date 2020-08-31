@@ -1,17 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:maze_generator/dataFlow/AccessibleStream.dart';
 import 'package:maze_generator/tile/Tile.dart';
 import 'package:maze_generator/maze/MazeGenerators.dart';
 import 'dart:math' as Math;
 
 class Maze extends StatefulWidget {
-  Maze.blitz({Key key, this.accessibleControls}): type = 'blitz', super(key: key);
-  Maze.timeRush({Key key, this.accessibleControls}): type = 'time rush', super(key: key);
-  //parameters for size and accessibleControls
-  final bool accessibleControls;
+  Maze.blitz({Key key}): type = 'blitz', super(key: key);
+  Maze.timeRush({Key key}): type = 'time rush', super(key: key);
   final String type;
   //the create state function
   @override
-  _MazeState createState() => _MazeState(this.accessibleControls, this.type);
+  _MazeState createState() => _MazeState(this.type);
 }
 
 class _MazeState extends State<Maze> {
@@ -37,10 +38,11 @@ class _MazeState extends State<Maze> {
   final int timeRushSize = 15;
   //tracks whether accesible controls or not
   bool accessibleControls;
+  StreamSubscription accessibleStream;
   //a constant reference to a randomizer
   Math.Random randomizer = new Math.Random();
   //constructor
-  _MazeState(this.accessibleControls, this.type) {
+  _MazeState(this.type) {
     switch (this.type) {
       case 'blitz':
         this.size = this.blitzSize;
@@ -55,6 +57,12 @@ class _MazeState extends State<Maze> {
   @override
   void initState() {
     this._generateMaze();
+    accessibleControls = AccessibleStream.accessible;
+    accessibleStream = AccessibleStream.makeListener((bool isAccessible) {
+      setState(() {
+        accessibleControls = isAccessible;
+      });
+    }, accessibleStream);
     super.initState();
   }
   //when the size updates updates the internal size
@@ -74,8 +82,13 @@ class _MazeState extends State<Maze> {
       }
       this._generateMaze();
     }
-    this.accessibleControls = this.widget.accessibleControls;
     super.didUpdateWidget(oldMaze);
+  }
+
+  @override
+  void dispose() {
+    accessibleStream.cancel();
+    super.dispose();
   }
   //fucntion to generate the maze, grab current tile, and start/stop
   void _generateMaze() {
