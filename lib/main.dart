@@ -23,8 +23,6 @@ class _MazeGameState extends State<MazeGame> {
   bool darkMode;
   StreamSubscription darkListener;
 
-  TabController pageController;
-
   @override
   void initState() {
     // init streams

@@ -16,7 +16,14 @@ class _AppScaffoldState extends State<AppScaffold> with SingleTickerProviderStat
   String title;
   int page = 0;
 
-  _AppScaffoldState(this.title);
+  TabController pageController;
+
+  _AppScaffoldState(this.title) {
+    pageController = new TabController(
+      vsync: this,
+      length: 3
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,37 +41,35 @@ class _AppScaffoldState extends State<AppScaffold> with SingleTickerProviderStat
           ),
         ),
         //the maze is the body of the app
-        body: [
-          Home(),
-          Maze.blitz(),
-          Maze.timeRush()
-        ][page],
-        //NavBar to switch between game modes and menu
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: (index) {
-            print(index);
-            setState(() {
-              page = index;
-            });
-          },
-          currentIndex: page,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text("Home"),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.map),
-              title: Text("Blitz"),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.playlist_add_check),
-              title: Text("Time Rush"),
-            ),
+        body: TabBarView(
+          controller: pageController,
+          children: <Widget>[
+            Home(),
+            Maze.blitz(),
+            Maze.timeRush()
           ],
-          // TODO why is this not off of the theme?
-          backgroundColor: Colors.blueGrey[800],
-          unselectedItemColor: Colors.blueGrey[300],
+          physics: NeverScrollableScrollPhysics(),
+        ),
+        //NavBar to switch between game modes and menu
+        bottomNavigationBar: BottomAppBar(
+          elevation: 20,
+          child: TabBar(
+            controller: pageController,
+            tabs: <Widget>[
+              Tab(
+                icon: Icon(Icons.home),
+                text: "Home"
+              ),
+              Tab(
+                icon: Icon(Icons.map),
+                text: "Blitz"
+              ),
+              Tab(
+                icon: Icon(Icons.playlist_add_check),
+                text: "Time Rush"
+              )
+            ],
+          )
         ),
       )
     );
