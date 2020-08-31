@@ -271,7 +271,7 @@ class _MazeState extends State<Maze> {
           this.triggerBlitzWin();
         }
         //the swipes y is less than 0 is moving bottom up
-        else if(deltaY < 0 && maze[this.currentTile]["up"]) {
+        else if(deltaY < 0 && maze[this.currentTile]["up"] && this.currentTile != this.entrance) {
           print("up");
           setState(() {
             //updates moves in the tiles
